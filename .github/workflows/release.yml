@@ -1,0 +1,35 @@
+name: build-and-release
+on:
+  push:
+    tags:
+      - 'v*'   # v1.1.0 のようなタグを push したときに動く
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore ./src/QrDemoVB/QrDemoVB.vbproj
+
+      - name: Publish single-file (win-x64, self-contained)
+        run: |
+          dotnet publish ./src/QrDemoVB/QrDemoVB.vbproj -c Release -r win-x64 --self-contained true ^
+            -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true ^
+            -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false ^
+            -o ./artifacts/win-x64
+          powershell -Command "Compress-Archive -Path ./artifacts/win-x64/* -DestinationPath ./artifacts/QrDemoVB-win-x64.zip"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/QrDemoVB-win-x64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
