@@ -1,14 +1,17 @@
 name: build-and-release
-
 on:
   push:
-    tags: ['v*']          # v1.1.0 などのタグを push で起動
+    tags: ['v*']
   release:
-    types: [published]    # GitHubの「Publish release」で起動
-  workflow_dispatch:       # 手動実行ボタン
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name (e.g. v1.1.0)'
+        required: true
 
 permissions:
-  contents: write          # Release作成に必要
+  contents: write
 
 jobs:
   release:
@@ -38,6 +41,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || github.event.release.tag_name || inputs.tag }}
           files: artifacts/QrDemoVB-win-x64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
