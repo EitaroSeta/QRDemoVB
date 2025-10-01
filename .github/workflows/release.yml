@@ -1,8 +1,10 @@
 name: build-and-release
 on:
   push:
-    tags:
-      - 'v*'   # v1.1.0 のようなタグを push したときに動く
+    tags: ['v*']
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   release:
