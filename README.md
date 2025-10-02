@@ -1,5 +1,8 @@
 ﻿# QrDemoVB
 
+![build-and-release](https://github.com/EitaroSeta/QRDemoVB/actions/workflows/release.yml/badge.svg)
+[**Download latest**](https://github.com/EitaroSeta/QRDemoVB/releases/latest)
+
 VB.NET 製のシンプルな **QRコード生成 CLI** です。  
 **QRCoder** を利用し、**PNG（PngByteQRCode）** / **SVG** をローカルで生成します。外部アクセス不要。
 
@@ -12,10 +15,9 @@ VB.NET 製のシンプルな **QRコード生成 CLI** です。
 ## 必要環境
 - **.NET 8 SDK**（推奨）
 - Windows / Linux / macOS（CLI版は可。PNGは System.Drawing 非依存の実装）
-- QRCoder ※ビルド時に取得
+- QRCoder
 
 ## ビルド
 ```bash
 dotnet build ./src/QrDemoVB
-
 
